@@ -1,12 +1,12 @@
 import React from 'react'
 
 import './App.css'
-
+import ListarAlunos from './pages/listarAlunos/listarAlunos'
 function App() {
 
   return (
     <>
-      <h1>Listar Alunos</h1>
+      <ListarAlunos/>
     </>
   )
 }
