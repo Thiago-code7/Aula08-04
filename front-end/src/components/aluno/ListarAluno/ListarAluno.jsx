@@ -1,40 +1,65 @@
-import React, { useState, useEffect } from "react";
-import { listarTodos } from "../../../service/alunoService";
-import style from './ListarAluno.module.css';
+import React, { useState, useEffect } from 'react'; 
+  // Importa React, useState e useEffect para gerenciamento de estados e efeitos.
 
-function ListarAluno() {
-    const [alunos, setAlunos] = useState([]);//Estado para armazenar a lista de alunos
-    const [erroMsg, setErroMsg] = useState('');
+import { listarTodos } from '../../../service/alunoService'; 
+  // Importa a função `listarTodos` do serviço para listar todos os alunos.
 
-    //funcao que e chamada para carregar o componente, para buscar os alunos
-    async function fetchAlunos() {
-        try {
-            const res = await listarTodos(); //chama o servico para listar todos os alunos
-            setAlunos(res.data)
-            setErroMsg(res.data.mensagem)
-        } catch (error) {
-            setErroMsg(error.response.data.mensagem);
-        }
+import styles from './ListarAlunos.module.css'; 
+  // Importa os estilos específicos para o componente.
+
+function ListarAlunos({ refreshTrigger }) { 
+  // Componente para listar alunos. Recebe `refreshTrigger` para recarregar a lista quando necessário.
+
+  const [alunos, setAlunos] = useState([]); 
+  // Estado para armazenar os alunos.
+
+  const [errorMsg, setErrorMsg] = useState(''); 
+  // Estado para armazenar a mensagem de erro, se houver.
+
+  async function fetchAlunos() { 
+    // Função para buscar os alunos do servidor.
+
+    try {
+      const res = await listarTodos(); 
+      // Chama o serviço para listar todos os alunos.
+
+      setAlunos(res.data); 
+      // Atualiza o estado com a lista de alunos.
+    } catch (error) {
+      setErrorMsg(error.response.data.mensagem || 'Erro ao listar alunos.');
+      // Exibe mensagem de erro caso a busca falhe.
     }
+  }
 
-    useEffect(() => {
-        fetchAlunos();// chama a funcao para buscar os alunos
-    }, [])// o array vazio garante que a funcao seja chamada apenas uma vez quando o componente for montado.
-    return (
-        <div>
-            <h2>Lista de Alunos</h2>
-            {erroMsg && <p>{erroMsg}</p>} {/* Exibe mensagem de erro se houver*/}
-           <ul>
-            {
-                alunos.map((aluno) =>(
-                    <li key={aluno.matricula}>
-                        {aluno.nome} - {aluno.email} - {aluno.matricula}
-                        </li>
-                ))
-            }
-           </ul>
+  useEffect(() => { 
+    // Efeito para buscar alunos quando o componente é montado ou o gatilho `refreshTrigger` mudar.
+    
+    fetchAlunos(); 
+    // Chama a função para buscar alunos.
+  }, [refreshTrigger]); 
+  // Dependência: recarrega quando `refreshTrigger` mudar.
 
-        </div>
-    );
+  return (
+    <div className={styles.container}>
+      <h2 className={styles.titulo}>Lista de Alunos</h2>
+      {/* Título da seção de lista de alunos. */}
+
+      {errorMsg && <p className={styles.error}>{errorMsg}</p>}
+      {/* Exibe mensagem de erro se houver. */}
+
+      <ul className={styles.lista}>
+        {/* Lista de alunos. */}
+        
+        {alunos.map((aluno) => (
+          <li key={aluno.matricula} className={styles.item}>
+            {/* Exibe as informações do aluno. */}
+            {aluno.nome} - {aluno.email} - Matrícula: {aluno.matricula}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
 }
-export default ListarAluno;
+
+export default ListarAlunos; 
+// Exporta o componente ListarAlunos.

@@ -1,59 +1,89 @@
-import React, { useState } from "react";
-import { criar } from "../../../service/alunoService"; // Supondo que esse seja o serviço para cadastrar um alu
-//import style from './CadastrarAluno.module.css'
+import React, { useState } from 'react';
+import styles from './CadastrarAluno.module.css';
+import { criar } from '../../../service/alunoService'; // Importa a função do serviço para criar aluno
 
-function CadastrarAluno() {
-    const [matricula, setMatricula] = useState(''); // Estado para a matrícula do aluno
-    const [nome, setNome] = useState(''); // Estado para o nome do aluno
-    const [email, setEmail] = useState(''); // Estado para o email do aluno
-    const [senha, setSenha] = useState(''); // Estado para a senha do aluno
-    const [erroMsg, setErroMsg] = useState(''); // Estado para mensagens de erro
-    const [sucessoMsg, setSucessoMsg] = useState(''); // Estado para mensagem de sucesso
+function CadastrarAluno({ onCadastro }) {
+  // Estados dos campos do formulário
+  const [matricula, setMatricula] = useState('');
+  const [nome, setNome] = useState('');
+  const [email, setEmail] = useState('');
+  const [senha, setSenha] = useState('');
 
-  async function criarAluno() {
+  // Estado para mensagem de feedback
+  const [mensagem, setMensagem] = useState('');
+
+  // Lógica para envio do formulário
+  async function handleSubmit(event) {
+    event.preventDefault(); // Previne o comportamento padrão do formulário
+
     try {
-        await criar({ matricula, nome, email, senha});
-        setSucessoMsg('Aluno cadastrado com sucesso');
-        setErroMsg('')
+      await criar({ matricula, nome, email, senha });
+      setMensagem('Aluno cadastrado com sucesso!');// Informação de sucesso no cadastro
+
+      // Limpar os campos
+      setMatricula('');
+      setNome('');
+      setEmail('');
+      setSenha('');
+      // Dispara o gatilho para ListarAlunos recarregar
+      onCadastro(); // Chama a função passada via prop, que é handleRefresh do componente pai
+
     } catch (error) {
-        setErroMsg(Error.response.data.mensagem)
+      setMensagem(error.response.data.mensagem || 'Erro ao cadastrar aluno.'); // Mensagem de erro caso o cadastro falhe
     }
   }
 
-  return(
-    <div>
-        <h2>Cadastrar Aluno</h2>
+  return (
+    <div className={styles.container}>
+      <h2>Cadastrar Aluno</h2>
+      <form onSubmit={handleSubmit} className={styles.form}>
+        
+        <label htmlFor="matricula">Matrícula:</label>
         <input
-        type="text"
-        value={matricula}
-        onChange={(e) => setMatricula(e.target.value)}
-        placeholder="Digite sua matricula"
+          id="matricula"
+          type="text"
+          value={matricula}
+          onChange={(e) => setMatricula(e.target.value)}
+          className={styles.input}
+          required
         />
+
+        <label htmlFor="nome">Nome:</label>
         <input
+          id="nome"
           type="text"
           value={nome}
           onChange={(e) => setNome(e.target.value)}
-          placeholder="Digite o seu Nome"
-          />
-          <input
-           type="text"
-           value={email}
-           onChange={(e) => setEmail(e.target.value)}
-           placeholder="Digite a seu email"
-           />
-            <input
-           type="text"
-           value={senha}
-           onChange={(e) => setSenha(e.target.value)}
-           placeholder="Digite a sua senha"
-           />
+          className={styles.input}
+          required
+        />
 
+        <label htmlFor="email">Email:</label>
+        <input
+          id="email"
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          className={styles.input}
+          required
+        />
 
+        <label htmlFor="senha">Senha:</label>
+        <input
+          id="senha"
+          type="password"
+          value={senha}
+          onChange={(e) => setSenha(e.target.value)}
+          className={styles.input}
+          required
+        />
 
-           <button onClick={criarAluno}>Cadastrar</button>
-           {erroMsg && <p>{erroMsg}</p>}
-           {sucessoMsg && <p>{sucessoMsg}</p>}
+        <button type="submit" className={styles.button}>Cadastrar</button>
+      </form>
+
+      {mensagem && <p className={styles.message}>{mensagem}</p>}
     </div>
-  )
+  );
 }
+
 export default CadastrarAluno;

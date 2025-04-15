@@ -2,7 +2,6 @@
     border: 1px solid #ccc;
     padding: 1rem;
     border-radius: 0.5rem;
-    background-color: #f9f9f9;
     font-size: 0.9rem;
   }
   .titulo {
@@ -10,25 +9,19 @@
     font-weight: bold;
     margin-bottom: 0.5rem;
   }
-  .inputGrupo {
-    margin-bottom: 0.6rem;
-  }
-  .label {
-    display: block;
-    margin-bottom: 0.2rem;
-  }
   .input {
-    width: 100%;
     padding: 0.3rem;
-    border: 1px solid #ccc;
-    border-radius: 0.3rem;
+    margin-right: 0.5rem;
   }
   .botao {
-    padding: 0.4rem 0.8rem;
-    background-color: #28a745;
+    padding: 0.3rem 0.6rem;
+    background-color: #007bff;
     color: white;
     border: none;
     border-radius: 0.3rem;
     cursor: pointer;
+  }
+  .resultado {
+    margin-top: 0.5rem;
   }
   

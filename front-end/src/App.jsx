@@ -1,13 +1,16 @@
 import React from 'react'
-
-import './App.css'
-
+import { BrowserRouter as Router, Routes, Route, BrowserRouter } from 'react-router-dom'
 import GerenciarAlunos from './pages/GerenciarAlunos/GerenciarAlunos'
+
 function App() {
 
   return (
     <>
-      <GerenciarAlunos/>
+     <BrowserRouter>
+        <Routes>
+          <Route path="/alunos" element={<GerenciarAlunos />} />
+        </Routes>
+     </BrowserRouter>
     </>
   )
 }
